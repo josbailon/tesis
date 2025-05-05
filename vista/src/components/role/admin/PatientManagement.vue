@@ -3,31 +3,26 @@
       <h1 class="page-title">Gestión de Pacientes</h1>
   
       <div class="table-card">
-        <button class="btn btn-primary" @click="openModal(null)">
-          Crear Paciente
-        </button>
-  
+        <button class="btn btn-primary" @click="openModal(null)">Crear Paciente</button>
         <table>
           <thead>
             <tr>
-              <th>Nombre</th>
+              <th>Nombre Completo</th>
+              <th>Edad</th>
+              <th>Tipo de Sangre</th>
               <th>Email</th>
-              <th>Historial</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="p in patientStore.patients" :key="p.id">
-              <td>{{ p.name }}</td>
+              <td>{{ p.fullName }}</td>
+              <td>{{ p.age }}</td>
+              <td>{{ p.bloodType }}</td>
               <td>{{ p.email }}</td>
-              <td>{{ p.history?.length || 0 }}</td>
               <td>
-                <button class="btn btn-secondary" @click="openModal(p)">
-                  Editar
-                </button>
-                <button class="btn btn-danger" @click="remove(p.id)">
-                  Eliminar
-                </button>
+                <button class="btn btn-secondary" @click="openModal(p)">Editar</button>
+                <button class="btn btn-danger" @click="remove(p.id)">Eliminar</button>
               </td>
             </tr>
           </tbody>
@@ -40,18 +35,44 @@
           <h2>{{ currentPatient ? 'Editar' : 'Crear' }} Paciente</h2>
           <form @submit.prevent="save">
             <div class="form-group">
-              <label>Nombre</label>
-              <input v-model="form.name" type="text" required />
+              <label>Nombre Completo</label>
+              <input v-model="form.fullName" type="text" placeholder="Nombre completo" required />
+            </div>
+            <div class="form-group">
+              <label>Edad</label>
+              <input v-model.number="form.age" type="number" placeholder="Edad" required />
+            </div>
+            <div class="form-group">
+              <label>Tipo de Sangre</label>
+              <select v-model="form.bloodType" required>
+                <option disabled value="">Selecciona</option>
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nacionalidad</label>
+              <input v-model="form.nationality" type="text" placeholder="Nacionalidad" required />
+            </div>
+            <div class="form-group">
+              <label>Provincia</label>
+              <input v-model="form.province" type="text" placeholder="Provincia" required />
+            </div>
+            <div class="form-group">
+              <label>Cantón</label>
+              <input v-model="form.canton" type="text" placeholder="Cantón" required />
+            </div>
+            <div class="form-group">
+              <label>Parroquia</label>
+              <input v-model="form.parish" type="text" placeholder="Parroquia" required />
             </div>
             <div class="form-group">
               <label>Email</label>
-              <input v-model="form.email" type="email" required />
+              <input v-model="form.email" type="email" placeholder="correo@ejemplo.com" required />
             </div>
             <div class="modal-actions">
               <button class="btn btn-primary" type="submit">Guardar</button>
-              <button class="btn btn-secondary" type="button" @click="closeModal">
-                Cancelar
-              </button>
+              <button class="btn btn-secondary" type="button" @click="closeModal">Cancelar</button>
             </div>
           </form>
         </div>
@@ -66,7 +87,16 @@
   const patientStore = usePatientStore()
   const modalOpen = ref(false)
   const currentPatient = ref(null)
-  const form = reactive({ name: '', email: '' })
+  const form = reactive({
+    fullName: '',
+    age: null,
+    bloodType: '',
+    nationality: '',
+    province: '',
+    canton: '',
+    parish: '',
+    email: ''
+  })
   
   onMounted(() => {
     patientStore.fetchPatients()
@@ -75,11 +105,21 @@
   function openModal(patient) {
     currentPatient.value = patient
     if (patient) {
-      form.name = patient.name
-      form.email = patient.email
+      Object.assign(form, {
+        fullName: patient.fullName,
+        age: patient.age,
+        bloodType: patient.bloodType,
+        nationality: patient.nationality,
+        province: patient.province,
+        canton: patient.canton,
+        parish: patient.parish,
+        email: patient.email
+      })
     } else {
-      form.name = ''
-      form.email = ''
+      Object.assign(form, {
+        fullName: '', age: null, bloodType: '', nationality: '',
+        province: '', canton: '', parish: '', email: ''
+      })
     }
     modalOpen.value = true
   }
@@ -103,6 +143,7 @@
     modalOpen.value = false
   }
   </script>
+  
   
   <style scoped>
   .admin-page {
