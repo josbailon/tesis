@@ -1,11 +1,13 @@
 <template>
-    <div class="admin-page">
-      <h1 class="page-title">Configuración del Sistema</h1>
-  
-      <div class="table-card settings-card">
-        <form @submit.prevent="save">
+  <div class="admin-page settings-page">
+    <div class="settings-card">
+      <header class="card-header">
+        <h2>Configuración del Sistema</h2>
+      </header>
+      <div class="card-body">
+        <form @submit.prevent="save" class="settings-form">
           <div class="form-group">
-            <label for="encryptionKey">Clave de cifrado</label>
+            <label for="encryptionKey">🛡️ Clave de cifrado</label>
             <input
               id="encryptionKey"
               v-model="form.encryptionKey"
@@ -15,7 +17,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="smtpHost">SMTP Host</label>
+            <label for="smtpHost">📧 SMTP Host</label>
             <input
               id="smtpHost"
               v-model="form.smtpHost"
@@ -25,7 +27,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="smtpPort">SMTP Port</label>
+            <label for="smtpPort">⚙️ SMTP Port</label>
             <input
               id="smtpPort"
               v-model.number="form.smtpPort"
@@ -35,116 +37,122 @@
             />
           </div>
           <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+            <button class="btn btn-primary" type="submit">
+              Guardar Cambios
+            </button>
           </div>
         </form>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { reactive, onMounted } from 'vue'
-  import { useSettingsStore } from '@/store/settingsStore.js'
-  
-  const settingsStore = useSettingsStore()
-  const form = reactive({
-    encryptionKey: '',
-    smtpHost: '',
-    smtpPort: 587
-  })
-  
-  onMounted(async () => {
-    await settingsStore.fetchSettings()
-    Object.assign(form, settingsStore.settings)
-  })
-  
-  async function save() {
-    await settingsStore.updateSettings(form)
-    await settingsStore.fetchSettings()
-  }
-  </script>
-  
-  <style scoped>
-  .admin-page {
-    padding: 20px;
-    background: #12151a;
-    min-height: 100vh;
-    color: #eceff1;
-  }
-  
-  .page-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: center;
-    color: #ffffff;
-  }
-  
-  .table-card {
-    background: #1e272e;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .settings-card {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-    text-align: left;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #f5f6fa;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 12px;
-    background: #2f3640;
-    border: 1px solid #57606f;
-    border-radius: 6px;
-    color: #eceff1;
-    font-size: 14px;
-    transition: border-color 0.2s;
-  }
-  
-  .form-group input:focus {
-    border-color: #00a8ff;
-    outline: none;
-  }
-  
-  .form-actions {
-    text-align: right;
-  }
-  
-  .btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, #00a8ff, #9c88ff);
-    color: #ffffff;
-  }
-  
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #0083cc, #7b6fd1);
-    transform: translateY(-1px);
-  }
-  </style>
-  
+  </div>
+</template>
+
+<script setup>
+import { reactive, onMounted } from 'vue'
+import { useSettingsStore } from '@/store/settingsStore.js'
+
+const settingsStore = useSettingsStore()
+const form = reactive({
+  encryptionKey: '',
+  smtpHost: '',
+  smtpPort: 587
+})
+
+onMounted(async () => {
+  await settingsStore.fetchSettings()
+  Object.assign(form, settingsStore.settings)
+})
+
+async function save() {
+  await settingsStore.updateSettings(form)
+  await settingsStore.fetchSettings()
+}
+</script>
+
+<style scoped>
+.admin-page {
+  padding: 2rem;
+  background: var(--gray-light);
+  min-height: 100vh;
+  font-family: var(--font-stack);
+}
+
+/* Card container */
+.settings-card {
+  max-width: 480px;
+  margin: 0 auto;
+  border-left: 6px solid var(--info);
+  border-radius: 0.75rem;
+  background: var(--white);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Card header */
+.card-header {
+  background: var(--info);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+}
+.card-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Card body & form */
+.card-body {
+  padding: 1.5rem;
+}
+.settings-form {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Form fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.form-group input {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gray);
+  border-radius: 0.5rem;
+  background: var(--gray-light);
+  transition: border var(--transition);
+  font-size: 0.9rem;
+}
+.form-group input:focus {
+  border-color: var(--info);
+  outline: none;
+}
+
+/* Form actions */
+.form-actions {
+  text-align: right;
+  margin-top: 1rem;
+}
+
+/* Button */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-primary {
+  background: var(--info);
+  color: var(--white);
+}
+.btn-primary:hover {
+  background: #0056b3; /* darker blue */
+  transform: translateY(-1px);
+}
+</style>

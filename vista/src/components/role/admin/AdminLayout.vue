@@ -1,83 +1,81 @@
 <template>
-    <div class="layout-container">
-      <header class="header">
-        <h1 class="logo">Medical Demo Admin</h1>
-        <button class="logout-btn" @click="handleLogout">Cerrar sesión</button>
-      </header>
-      <div class="body">
-        <AppSidebar />
-        <main class="content">
-          <router-view />
-        </main>
-      </div>
+  <div :class="['layout-container', themeClass]">
+    <!-- Header -->
+    <AppHeader
+      @toggle-sidebar="collapsed = !collapsed"
+      @theme-change="changeTheme"
+      @search="onSearch"
+    />
+
+    <!-- Body: Sidebar + Content -->
+    <div class="body">
+      <AppSidebar @toggle-sidebar="collapsed = !collapsed" />
+      <main :class="['content', { collapsed }]">
+        <router-view />
+      </main>
     </div>
-  </template>
-  
-  <script setup>
-  import AppSidebar from '@/components/layout/AppSidebar.vue'
-  import { useAuthStore } from '@/store/authStore.js'
-  import { useRouter } from 'vue-router'
-  
-  const auth = useAuthStore()
-  const router = useRouter()
-  
-  function handleLogout() {
-    auth.logout()
-    router.push({ name: 'Login' })
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, watch, provide } from 'vue'
+import AppHeader from '@/components/layout/AppHeader.vue'
+import AppSidebar from '@/components/layout/AppSidebar.vue'
+
+const collapsed = ref(false)
+provide('collapsed', collapsed)
+
+// Theme management
+const themes = ['light','dark','info','warning','purple','orange']
+const currentTheme = ref(localStorage.getItem('admin-theme') || 'light')
+const themeClass = computed(() => `theme-${currentTheme.value}`)
+
+watch(currentTheme, val => {
+  localStorage.setItem('admin-theme', val)
+})
+
+// Handle theme-change emitted by AppHeader
+function changeTheme(theme) {
+  if (themes.includes(theme)) {
+    currentTheme.value = theme
   }
-  </script>
-  
-  <style scoped>
-  .layout-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background: #12151a;
-    color: #eceff1;
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    padding: 0 24px;
-    background: #1e272e;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  }
-  
-  .logo {
-    font-size: 20px;
-    font-weight: 700;
-    color: #ffffff;
-  }
-  
-  .logout-btn {
-    background: none;
-    border: 1px solid #57606f;
-    padding: 6px 12px;
-    border-radius: 6px;
-    color: #dcdde1;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
-  .logout-btn:hover {
-    background: #dcdde1;
-    color: #1e272e;
-  }
-  
-  .body {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-  }
-  
-  .content {
-    flex: 1;
-    padding: 24px;
-    overflow-y: auto;
-    background: #12151a;
-  }
-  </style>
-  
+}
+
+// Search handler (receives search query from AppHeader)
+function onSearch(query) {
+  // Puedes propagar este evento a componentes hijos o manejarlo aquí
+  console.log('Buscar usuarios con:', query)
+}
+</script>
+
+<style scoped>
+/* Layout container uses global background variables */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--gray-light);
+  transition: background var(--transition), color var(--transition);
+}
+
+/* Body: flex between sidebar and content */
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Main content area */
+.content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: var(--gray-light);
+  transition: margin-left var(--transition);
+}
+
+/* Optional: when sidebar is collapsed, you might adjust padding/margin */
+.content.collapsed {
+  margin-left: 64px;
+}
+</style>

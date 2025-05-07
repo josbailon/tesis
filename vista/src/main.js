@@ -1,14 +1,11 @@
+// main.js
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import router from './router'
 import App from './App.vue'
+import router from './router'
+import './index.css'    // <— así cargas las variables y temas
 
-const app = createApp(App)
-
-// Estado global
-app.use(createPinia())
-
-// Enrutamiento
-app.use(router)
-
-app.mount('#app')
+createApp(App)
+  .use(createPinia())
+  .use(router)
+  .mount('#app')

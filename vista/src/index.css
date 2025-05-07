@@ -1,0 +1,89 @@
+/* -------------------------
+   VARIABLES GLOBALES (& temas)
+   <!--index.css-->
+   ------------------------- */
+   :root {
+    --white:       #ffffff;
+    --black:       #212529;
+    --green:       #28a745;   /* success */
+    --green-dark:  #218838;
+    --red:         #dc3545;   /* danger */
+    --red-dark:    #c82333;
+    --info:        #007bff;   /* info */
+    --warning:     #ffc107;   /* warning */
+    --purple:      #6f42c1;   /* acento púrpura */
+    --orange:      #fd7e14;   /* intermediate */
+    --gray-light:  #f8f9fa;
+    --gray:        #ced4da;
+    --gray-dark:   #343a40;
+    --transition:  0.3s ease;
+    --font-stack:  system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  /* Tema Light (por defecto) */
+  /* .theme-light hereda :root tal cual */
+  
+  /* Tema Dark */
+  .theme-dark {
+    --white:      #212529;
+    --black:      #f8f9fa;
+    --gray-light: #343a40;
+    --gray:       #495057;
+    --gray-dark:  #ced4da;
+    /* opcionalmente ajustar acentos oscuros:
+       --green: #218838; 
+    */
+  }
+  
+  /* Tema Info (usa azul en lugar de verde) */
+  .theme-info {
+    --green: var(--info);
+  }
+  
+  /* Tema Warning (usa amarillo en lugar de verde) */
+  .theme-warning {
+    --green: var(--warning);
+  }
+  
+  /* Tema Purple */
+  .theme-purple {
+    --green: var(--purple);
+  }
+  
+  /* Tema Orange */
+  .theme-orange {
+    --green: var(--orange);
+  }
+  
+  /* -------------------------
+     STYLES BÁSICOS GLOBALES
+     ------------------------- */
+  body, .admin-page {
+    background: var(--gray-light);
+    color: var(--black);
+    font-family: var(--font-stack);
+    margin: 0;
+  }
+  
+  h1, .page-title {
+    color: var(--green);
+  }
+  
+  /* Ejemplos de uso en botones, tarjetas, tablas, etc.: */
+  /*
+  .btn {
+    transition: background var(--transition), color var(--transition);
+  }
+  .btn-primary {
+    background: var(--green);
+    color: var(--white);
+  }
+  .btn-primary:hover {
+    background: var(--green-dark);
+  }
+  .btn-danger {
+    background: var(--red);
+    color: var(--white);
+  }
+  */
+  
